@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
 
 import es from "date-fns/locale/es";
+import { useUiStore } from "../../hooks";
 registerLocale("es", es);
 
 const customStyles = {
@@ -25,7 +26,8 @@ const customStyles = {
 ReactModal.setAppElement("#root");
 
 export const CalendarModal = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const { closeDateModal, isDateModalOpen } = useUiStore();
+
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formValues, setFormValues] = useState({
     title: "Duvan",
@@ -54,7 +56,7 @@ export const CalendarModal = () => {
   };
 
   const onCloseModal = () => {
-    setIsOpen(false);
+    closeDateModal();
   };
 
   const onSubmit = (event) => {
@@ -70,7 +72,7 @@ export const CalendarModal = () => {
 
   return (
     <ReactModal
-      isOpen={isOpen}
+      isOpen={isDateModalOpen}
       onRequestClose={onCloseModal}
       style={customStyles}
       className="modal"
