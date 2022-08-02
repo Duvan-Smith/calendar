@@ -26,8 +26,7 @@ const customStyles = {
 ReactModal.setAppElement("#root");
 
 export const CalendarModal = () => {
-  const { activeEvent } = useCalendarStore();
-
+  const { activeEvent, startSavingEvent } = useCalendarStore();
   const { closeDateModal, isDateModalOpen } = useUiStore();
 
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -61,7 +60,7 @@ export const CalendarModal = () => {
     closeDateModal();
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     setFormSubmitted(true);
     const difference = differenceInSeconds(formValues.end, formValues.start);
@@ -70,6 +69,9 @@ export const CalendarModal = () => {
       return;
     }
     if (formValues.title.length <= 0) return;
+    await startSavingEvent(formValues);
+    closeDateModal();
+    setFormSubmitted(false);
   };
 
   useEffect(() => {
