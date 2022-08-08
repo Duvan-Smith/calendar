@@ -26,5 +26,26 @@ export const useAuthStore = () => {
     }
   };
 
-  return { status, user, errorMessage, startLogin };
+  const startRegister = async ({ name, email, password }) => {
+    dispatch(onChecking());
+    try {
+      const { data } = await calendarApi.post("/auth/create", {
+        name,
+        email,
+        password,
+      });
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("token-init-date", new Date().getTime());
+      dispatch(onLogin({ name: data.name, uid: data.uid }));
+    } catch (error) {
+      const { response } = error;
+      const { data } = response;
+      dispatch(onLogout(data.msg ?? "Credenciales incorrectas"));
+      setTimeout(() => {
+        dispatch(clearErrorMessage());
+      }, 10);
+    }
+  };
+
+  return { status, user, errorMessage, startLogin, startRegister };
 };
